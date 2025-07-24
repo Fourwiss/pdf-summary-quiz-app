@@ -11,3 +11,5 @@ npm run start
 ```
 
 The app expects the backend API at `VITE_API_URL` (default `http://localhost:5000`).
+
+Features include uploading PDFs, viewing summaries, asking questions, generating quiz questions and exporting results.

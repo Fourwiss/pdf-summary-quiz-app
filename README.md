@@ -22,3 +22,11 @@ cd ../client && npm install && npm run start
 ```
 
 The app is ready for deployment on Vercel/Render/Glitch.
+
+## Features
+
+- Upload and delete multiple PDF files
+- Automatic summarization using OpenAI
+- Ask free-form questions about each summary
+- Generate multiple choice and short answer quiz questions
+- Export summaries and questions as a PDF

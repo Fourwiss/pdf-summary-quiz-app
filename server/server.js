@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import pdfParse from 'pdf-parse';
 import { Configuration, OpenAIApi } from 'openai';
+import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
 
@@ -102,6 +103,56 @@ app.post('/api/ask', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to answer question' });
+  }
+});
+
+app.post('/api/questions', async (req, res) => {
+  try {
+    const { fileId } = req.body;
+    const file = await File.findById(fileId);
+    const prompt = `Generate three multiple choice and two short answer questions in JSON based on this summary:\n${file.summary}`;
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
+    });
+    const questions = JSON.parse(completion.data.choices[0].message.content);
+    res.json({ questions });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to generate questions' });
+  }
+});
+
+app.post('/api/export', async (req, res) => {
+  try {
+    const { fileId, questions } = req.body;
+    const file = await File.findById(fileId);
+    const doc = new PDFDocument();
+    const chunks = [];
+    doc.on('data', (d) => chunks.push(d));
+    doc.on('end', () => {
+      const pdfData = Buffer.concat(chunks);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="quiz.pdf"`);
+      res.send(pdfData);
+    });
+    doc.fontSize(16).text('Summary', { underline: true });
+    doc.fontSize(12).text(file.summary);
+    doc.addPage();
+    doc.fontSize(16).text('Questions', { underline: true });
+    questions.forEach((q, i) => {
+      doc.moveDown();
+      doc.fontSize(12).text(`${i + 1}. ${q.question}`);
+      if (q.options) {
+        q.options.forEach((opt, idx) => {
+          doc.text(`   ${String.fromCharCode(65 + idx)}. ${opt}`);
+        });
+      }
+    });
+    doc.end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to export PDF' });
   }
 });
 
