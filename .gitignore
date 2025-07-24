@@ -1,0 +1,6 @@
+# Node
+node_modules
+.env
+uploads
+# Python
+__pycache__
