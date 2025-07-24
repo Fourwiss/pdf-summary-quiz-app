@@ -1,21 +1,36 @@
-# 🧠 PDF Tabanlı Otomatik Özetleme ve Soru Üretme Sistemi
+# PDF Summary & Quiz App
 
-🎯 Bu sistem haftalık ders PDF'lerini:
-- Birleştirir
-- Metne çevirir
-- Özetler
-- Ve içerikten otomatik olarak sorular üretir
+A full-stack application for uploading PDFs, generating summaries, asking questions, and exporting quiz questions.
 
-## 🚀 Özellikler
-- 📥 Çoklu PDF yükleme
-- 🧠 Otomatik özetleme (Türkçe/İngilizce)
-- ❓ Quiz üretimi
-- 📄 Özet ve quiz çıktıları
+## Tech Stack
+- **Frontend:** React + Vite + Tailwind CSS
+- **Backend:** Node.js + Express
+- **Database:** MongoDB via Mongoose
+- **NLP:** OpenAI API
 
-## 📦 Kullanılan Teknolojiler
-- Python, Streamlit
-- HuggingFace Transformers (`mT5`, `T5`)
-- PyMuPDF (fitz)
+## Setup
 
-## 🔗 Canlı Demo
-(Deploy edildikten sonra link buraya eklenebilir)
+1. Clone repository
+2. Install dependencies for server and client (requires internet)
+3. Copy `.env.example` in `server` to `.env` and set credentials
+4. Run MongoDB
+5. Start backend and frontend
+
+```bash
+cd server && npm install && npm run dev
+cd ../client && npm install && npm run start
+```
+
+The app is ready for deployment on Vercel, Render or Glitch.
+
+### Deploying to Vercel
+
+Install the Vercel CLI, log in and run `vercel` from the project root to deploy.
+
+## Features
+
+- Upload and delete multiple PDF files
+- Automatic summarization using OpenAI
+- Ask free-form questions about each summary
+- Generate multiple choice and short answer quiz questions
+- Export summaries and questions as a PDF
